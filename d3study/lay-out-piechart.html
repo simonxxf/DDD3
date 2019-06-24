@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="https://d3js.org/d3.v5.js"></script>
+		<link href="./css/reset.css" rel="stylesheet" type="text/css"/>
+	</head>
+	<body>
+		<div id="svg"></div>
+		<script>
+      //生成svg画布
+      const svg = d3.select('#svg').append('svg').attr('width',"350").attr('height','300')
+
+      //定义数据集 
+      const dataset = [
+          ["JAVA",60638],
+          ['C',35466],
+          ['JAVASCRIPT',33633],
+          ['PHP',29725],
+          ['PYTON',28689],
+          ['CSS',19797],
+          ['PERL',19739],
+          ['R',18294],
+          ['C#',15121],
+          ['C++',8735],
+          ['OBJECTIVE C',6657],
+          ['VISUAL BASICS',1913],
+          ['SHELL',249],
+          ['MATLAB',219,]
+
+
+         ];
+
+      //定义饼图的布局
+        const pie = d3.pie().value(d=>d[1])
+
+        const pieData = pie(dataset)  //自动帮你算出了 数据起始角度和终止角度
+        console.log(dataset)
+        console.log(pieData)
+
+      //定义弧生成器 arc()方法 定义内弧半径和外弧半径 //内半径为0 即为饼图
+      const arcPath = d3.arc().innerRadius(0).outerRadius(100)
+      const color = d3.scaleOrdinal(d3.schemeCategory10); //生成一个随机颜色
+
+       //使用path的'd'属性去生成一个path的svg标签 
+			 svg.selectAll('path').data(pieData).enter().append('path').attr('d',d=>arcPath(d)).attr('transform',"translate(150,200)")
+			 										.attr('stroke','#000').attr('stroke-width','0px').attr('fill',(d,i)=>color(i))
+
+      // //生成并绑定text标签
+      // svg.selectAll('text').data(pieData).enter().append('text')
+      //     .attr('transform',d=>'translate(150,200)'+`translate(${arcPath.centroid(d)})`) //text的位置等于 path偏倚的位置 加上个圆弧的中心点的位置
+      //     .attr('text-anchor','middle').attr('fill','#fff').attr('font-size','10px')
+      //     .text(d=>(d.data[0]))
+
+      const labels =svg.append('g')
+        labels.selectAll('text').data(pieData).enter().append('text')
+              .attr('stroke',(d,i)=>color(i))
+              .attr('transform',(d,i)=>`translate(150,100)`+`translate(120,${i*15})`) //text的位置等于 path偏倚的位置 加上个圆弧的中心点的位置
+              .style('font-size','10px')
+              .text(d=>d.data[0])
+
+		</script>
+	</body>
+</html>

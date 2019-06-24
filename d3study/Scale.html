@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="https://d3js.org/d3.v5.js"></script>
+		<link href="./css/reset.css" rel="stylesheet" type="text/css"/>
+	</head>
+	<body>
+    <h2>SVG</h2>
+		<div id="svg"></div>
+		<script>
+        const svg = d3.select("#svg").append("svg").attr("height",300).attr("width",300) // 生成svg
+        
+
+      //线性比例尺
+      const xScale = d3.scaleLinear().domain([1000,0]).range([0,200])
+      console.log(xScale(5))
+
+      //生一个左坐标轴
+      const axis = d3.axisLeft(xScale)
+      
+      const gAxis = svg.append('g').attr('transform',"translate(50,10)")
+      gAxis.call(axis);
+
+		</script>
+	</body>
+</html>

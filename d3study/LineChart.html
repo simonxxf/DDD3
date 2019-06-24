@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="https://d3js.org/d3.v5.js"></script>
+		<link href="./css/reset.css" rel="stylesheet" type="text/css"/>
+	</head>
+	<body>
+		<div id="svg"></div>
+		<script>
+			const dataset = [50,43,120,87,99,167,142];
+      const padding = {top:20,left:30,right:20,bottom:20}
+			const width = 300;
+			const height = 300; //定义svg的宽高
+
+      const xAxisWidth =width-padding.left-padding.right//x坐标轴的长度
+      const yAxisWidth = height-padding.top-padding.bottom//y坐标轴的长度
+
+			const svg = d3.select("#svg").append("svg").attr("height",height).attr("width",width) // 生成svg画布
+		
+       //定义x方向的Band比例尺
+      const xScale = d3.scaleBand().domain(dataset.map((d,i)=>i)).range([0,xAxisWidth]).padding(0.1)
+
+      //定义y方向的线性比例尺
+      const yScale = d3.scaleLinear().domain([d3.max(dataset,d=>d),0]).range([0,yAxisWidth])//*错误点
+      
+      //生成定义x方向坐标轴
+      const xAxis = d3.axisBottom(xScale)
+      //定义y方向坐标轴
+      const yAxis = d3.axisLeft(yScale)
+
+
+      //定义一个容器
+      const gx = svg.append('g').attr('transform',`translate(${padding.left},${height-padding.bottom})`)
+      const gy = svg.append('g').attr('transform',`translate(${padding.left},${height - padding.bottom-yAxisWidth })`)
+      //将坐标轴放入容器 - 在svg上显示
+      gx.call(xAxis)
+      gy.call(yAxis)
+
+
+      //使用线段生成器 去生成一个直线
+
+      const linePath = d3.line().curve(d3.curveBasis).x((d,i)=> xScale(i) + padding.left + xScale.bandwidth()/2)
+                          .y(d=>height-padding.bottom-(yScale(0) - yScale(d)))  //最大值减去数据值yScale(0) - yScale(d) 传入数据的应该是比例尺而不是坐标轴
+
+     //使用path的'd'属性去生成一个path的svg标签 
+      svg.append('path').attr('d',linePath(dataset)).attr('stroke','#000').attr('stroke-width','3px').attr('fill','none')
+
+
+
+		</script>
+	</body>
+</html>

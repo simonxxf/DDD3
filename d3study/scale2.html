@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="https://d3js.org/d3.v5.js"></script>
+		<link href="./css/reset.css" rel="stylesheet" type="text/css"/>
+	</head>
+	<body>
+		<div id="svg"></div>
+		<script>
+			const dataset = [50,43,120,87,99,167,142];
+			const width = 400;
+			const height = 400; //定义svg的宽高
+			const svg = d3.select("#svg").append("svg").attr("height",height).attr("width",width) // 生成svg
+			const padding = {top:20,left:20,right:20,bottom:20}
+
+      const xAxisWidth =width-padding.left-padding.right//x坐标轴的长度
+      const yAxisWidth = height-padding.top-padding.bottom//y坐标轴的长度
+
+			const rectStep = 35 //每个柱形的宽+空白
+      const rectWidth = 30 //柱形的宽
+
+
+            //xy比列尺
+      const xScale =d3.scaleBand().domain(dataset.map((O,i)=>i)).range([0,xAxisWidth]).padding(0.2)//.好 不是，号
+      const yScale= d3.scaleLinear().domain([0,d3.max(dataset)]).rangeRound([yAxisWidth,0])
+
+      const xAxis = d3.axisBottom(xScale)
+      const gX = svg.append('g').attr('transform',`translate(${padding.left},${height - padding.bottom})`)
+      gX.call(xAxis)
+
+      const yAxis = d3.axisLeft(yScale)
+      const gY = svg.append('g').attr('transform',`translate(${padding.left},${height - yAxisWidth - padding.bottom})`)
+      gY.call(yAxis)
+      
+      const color = d3.scaleOrdinal(d3.schemeCategory10); //生成一个随机颜色
+
+      const getRect = obj =>{
+        obj.attr('fill',(d,i)=>color(i))
+					.attr('x',(d,i)=>padding.left + xScale(i))
+					.attr('y',(d,i)=>height- padding.bottom- (yScale(0) - yScale(d)))
+					.attr('width', xScale.bandwidth())
+					.attr('height',d=> yScale(0) - yScale(d))
+      }
+
+      const getText = obj=>{
+        obj.attr('fill','#fff').attr("class","number")
+          .attr('font-size','14px').attr('text-anchor','middle')
+          .attr('x',(d,i)=>padding.left + xScale(i))
+          .attr('y',(d,i)=>height- padding.bottom - (yScale(0) - yScale(d)))
+          .text(d=>d)
+          .attr('dx',xScale.bandwidth()/2)
+          .attr('dy',"1em")
+      }
+
+
+
+
+      const init = dataset=>{
+        getRect(svg.selectAll('rect').data(dataset).enter().append('rect'))
+        getText(svg.selectAll('.number').data(dataset).enter().append('text'))
+      }
+
+      const update =dataset =>{
+        getRect(svg.selectAll('rect').data(dataset))
+        getText(svg.selectAll('.number').data(dataset))
+      }
+
+      init(dataset);
+      // update([50,43,87,99,167,500]);
+
+
+
+		</script>
+	</body>
+</html>
