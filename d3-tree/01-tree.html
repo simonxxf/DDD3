@@ -19,9 +19,9 @@
 			}
 			/* 连线 */
 			.link {
-				fill: #ccc;
+				fill: none;
 				stroke: #ccc;
-				stroke-width: 1.5px;
+				stroke-width: 1px;
 			}
 
 		</style>
@@ -60,7 +60,7 @@
 
 				//b. 生成连线
 				const link = svg.selectAll('.link')
-										.data(links, d=>d.name)
+										.data(links)
 										.enter()
 										.append('path')
 										.attr('class','link')
@@ -73,6 +73,17 @@
 												.append('g')
 												.attr('class','node')
 												.attr('transform',d=>`translate(${d.y},${d.x})`)
+
+				//给node节点加圆圈
+				node.append('circle')
+						.attr('r',5)
+				
+				node.append('text')
+						.text(d => d.name)
+						.attr('dx',d => d.children ? -15 : 15) //有子节点 左移15 没有右移15
+						.attr('dy',5)
+						.attr('text-anchor', d=> d.children ? "end" : "start")
+						
 
 
 			})
