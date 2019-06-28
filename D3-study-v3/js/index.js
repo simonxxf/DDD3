@@ -40,7 +40,7 @@ g
 
 
 const x_axis=d3.axisBottom(scale_x)  //x坐标轴
-
+                .ticks(7)
 const y_axis=d3.axisLeft(scale_y)
 
 g.append('g')

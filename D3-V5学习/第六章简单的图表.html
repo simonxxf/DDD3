@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>tree</title>
+		<link href="./css/reset.css" rel="stylesheet" type="text/css"/>
+		<script src="https://d3js.org/d3.v5.js"></script>
+	</head>
+	<body>
+		<svg width="960" height="600"></svg>
+		<script>
+			const marge = {top:60,bottom:60,left:60,right:60}//设置边距
+			const dataset = [ 250 , 210 , 170 , 130 , 90 ];  //数据（表示矩形的宽度）
+			const svg = d3.select('svg')
+						const g = svg.append('g')
+													.attr("transform",`translate(${marge.top},${marge.left})`)
+
+
+			const rectHeight = 30;//设置每一个矩形的高度
+    	g.selectAll('rect')
+				.data(dataset)
+				.enter()
+				.append('rect')
+				.attr('x',20)
+				.attr('y',(d,i)=>i*rectHeight)
+				.attr('width',d=>d)
+				.attr('height',rectHeight-5)
+				.attr('fill','blue')
+
+    
+		</script>
+		
+	</body>
+</html>
+ 
